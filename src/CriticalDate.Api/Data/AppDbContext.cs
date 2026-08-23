@@ -12,6 +12,6 @@ public class AppDbContext: DbContext
 
     public DbSet<Product> Products => Set<Product>();
     public DbSet<InventoryItem> InventoryItems => Set<InventoryItem>();
-    public DbSet<Store> Store => Set<Store>();
+    public DbSet<Store> Stores => Set<Store>();
     public DbSet<PriceChangeRequest> PriceChangeRequests => Set<PriceChangeRequest>();
 }
