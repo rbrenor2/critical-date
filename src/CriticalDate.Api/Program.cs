@@ -21,6 +21,13 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+// Seed DB
+using(var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    await DbSeeder.SeedAsync(db);
+}
+
 // Use Swagger
 if (app.Environment.IsDevelopment())
 {
