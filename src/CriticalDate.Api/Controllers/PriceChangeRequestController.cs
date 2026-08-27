@@ -16,10 +16,10 @@ public class PriceChangeRequestsController: ControllerBase
     }
 
     [HttpPost]
-    public ActionResult<PriceChangeRequestResponseDto> Create(CreatePriceChangeRequestDto request)
+    public async Task<ActionResult<PriceChangeRequestResponseDto>> Create(CreatePriceChangeRequestDto request)
     {
-        var result = _priceChangeService.Create(request);
+        var result = await _priceChangeService.CreateAsync(request);
 
         return Ok(result);
-    } 
+    }
 }

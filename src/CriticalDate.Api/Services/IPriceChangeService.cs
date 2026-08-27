@@ -4,5 +4,5 @@ namespace CriticalDate.Api.Services;
 
 public interface IPriceChangeService
 {
-    PriceChangeRequestResponseDto Create(CreatePriceChangeRequestDto request);
+    Task<PriceChangeRequestResponseDto> CreateAsync(CreatePriceChangeRequestDto request);
 }
