@@ -10,7 +10,7 @@ public class PriceChangeRequestsController: ControllerBase
 {
     private readonly IPriceChangeService _priceChangeService;
 
-    public PriceChangeRequestsController( IPriceChangeService priceChangeService)
+    public PriceChangeRequestsController(IPriceChangeService priceChangeService)
     {
         _priceChangeService = priceChangeService;
     }

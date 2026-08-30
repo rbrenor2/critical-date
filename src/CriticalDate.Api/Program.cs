@@ -1,4 +1,5 @@
 using CriticalDate.Api.Data;
+using CriticalDate.Api.Domain;
 using CriticalDate.Api.Services;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddScoped<IPriceChangeService, PriceChangeService>();
+builder.Services.AddScoped<MarkdownPolicy>();
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi

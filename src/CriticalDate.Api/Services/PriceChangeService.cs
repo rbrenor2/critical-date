@@ -1,5 +1,6 @@
 using System.Runtime.CompilerServices;
 using CriticalDate.Api.Data;
+using CriticalDate.Api.Domain;
 using CriticalDate.Api.Dtos;
 using CriticalDate.Api.Models;
 using Microsoft.EntityFrameworkCore;
@@ -9,14 +10,17 @@ namespace CriticalDate.Api.Services;
 public class PriceChangeService : IPriceChangeService
 {
     private AppDbContext _db;
+    private MarkdownPolicy _markdownPolicy;
 
-    public PriceChangeService(AppDbContext db)
+    public PriceChangeService(AppDbContext db, MarkdownPolicy markdownPolicy)
     {
         _db = db;
+        _markdownPolicy = markdownPolicy;
     }
     public async Task<PriceChangeRequestResponseDto> CreateAsync(CreatePriceChangeRequestDto request)
     {
         var inventoryItem = await _db.InventoryItems
+        .Include(i => i.Store)
         .FirstOrDefaultAsync(i => i.Id == request.InventoryItemId);
 
         if (inventoryItem is null)
@@ -33,6 +37,8 @@ public class PriceChangeService : IPriceChangeService
             CreatedAt = DateTime.UtcNow
         };
 
+        var status = _markdownPolicy.Evaluate(inventoryItem, request.RequestedPrice);
+
         _db.PriceChangeRequests.Add(changeRequest);
         await _db.SaveChangesAsync();
 
@@ -42,7 +48,7 @@ public class PriceChangeService : IPriceChangeService
             Id = changeRequest.Id,
             InventoryItemId = request.InventoryItemId,
             RequestedPrice = request.RequestedPrice,
-            Status = PriceChangeRequestStatus.PendingReview
+            Status = status
         };
         return response;
     }
