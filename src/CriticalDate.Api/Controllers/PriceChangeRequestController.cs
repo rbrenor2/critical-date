@@ -22,4 +22,12 @@ public class PriceChangeRequestsController: ControllerBase
 
         return Ok(result);
     }
+
+    [HttpPut]
+    public async Task<ActionResult<PriceChangeAnalysisResponseDto>> Update(UpdatePriceChangeRequestDto request)
+    {
+        var result = await _priceChangeService.UpdateAsync(request);
+
+        return Ok(result);
+    }
 }

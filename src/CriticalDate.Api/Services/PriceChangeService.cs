@@ -1,7 +1,7 @@
-using System.Runtime.CompilerServices;
 using CriticalDate.Api.Data;
 using CriticalDate.Api.Domain;
 using CriticalDate.Api.Dtos;
+using CriticalDate.Api.Exceptions;
 using CriticalDate.Api.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,7 +25,7 @@ public class PriceChangeService : IPriceChangeService
 
         if (inventoryItem is null)
         {
-            throw new InvalidOperationException("Inventory item not found");
+            throw new NotFoundException("Inventory item not found");
         }
 
         var changeRequest = new PriceChangeRequest
@@ -51,5 +51,24 @@ public class PriceChangeService : IPriceChangeService
             Status = status
         };
         return response;
+    }
+
+    public async Task<PriceChangeAnalysisResponseDto> UpdateAsync(UpdatePriceChangeRequestDto request)
+    {
+        var priceChangeRequest = await _db.PriceChangeRequests.FirstOrDefaultAsync(i => i.Id == request.PriceChangeRequestId);
+        
+        if(priceChangeRequest is null)
+        {
+            throw new NotFoundException("Price change request not found");
+        }
+        
+        priceChangeRequest.Status = request.Status;
+        await _db.SaveChangesAsync();
+
+        return new PriceChangeAnalysisResponseDto
+        {
+            PriceChangeRequestId = request.PriceChangeRequestId,
+            Status = request.Status
+        };
     }
 }
